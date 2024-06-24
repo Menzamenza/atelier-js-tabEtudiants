@@ -22,6 +22,36 @@ function Moyenne() {
     return Total / students.length;
 }
 
+// FONCTION SOMME DES NOTES
+function SommeNote() {
+    let totalNote = 0
+    for (const chaqueNote of students) {
+        totalNote += chaqueNote.note
+    }
+    return totalNote
+}
+
+
+// FONCTION SOMME DES AGES
+function SommeAge() {
+    let totalAge = 0
+    for (const chaqueAge of students) {
+        totalAge += chaqueAge.age
+    }
+    return totalAge
+}
+
+// FONCTION NOMBRE DE NOTES
+function compterNotes() {
+    return students.length;
+}
+
+// FONCTION NOMBRE D'AGES
+function compterAge() {
+    return students.length;
+}
+
+
 // Fonction pour afficher les étudiants
 function AfficheEtudiant(EtudiantAffiche) {
     const tbody = document.getElementById('Tbody');
@@ -33,7 +63,7 @@ function AfficheEtudiant(EtudiantAffiche) {
         const tr = document.createElement('tr');
         tr.innerHTML = `<td>${student.nom}</td><td>${student.prenom}</td><td>${student.note}</td><td>${student.age}</td>`;
         tbody.appendChild(tr);
-    } 
+    }
 
     // tiliser map et une boucle for pour afficher
     // const studentMap = students.map(student => {
@@ -54,14 +84,11 @@ function AfficheEtudiant(EtudiantAffiche) {
 }
 
 
-
-
-
 function Pagination(EtudiantPagination) {
     const pagination = document.getElementById('pagination');
     pagination.innerHTML = '';
 
-    const pageCount =Math.ceil(EtudiantPagination.length / NbreEtudiantsPage);
+    const pageCount = Math.ceil(EtudiantPagination.length / NbreEtudiantsPage);
 
     // parcourir le nombre de page (=2) et mettre les liens de switch entre les paginations
     for (let i = 1; i <= pageCount; i++) {
@@ -94,6 +121,11 @@ function filtre() {
     Pagination(EtudiantFiltres);
 
     document.getElementById('MoyGen').innerText = Moyenne();
+    document.getElementById('card1').innerText=SommeNote();
+    document.getElementById('card2').innerText="La somme des ages est égale à " + SommeAge()
+    document.getElementById('card3').innerText="Le nombre de note est égale à " + compterNotes(students)
+    document.getElementById('card4').innerText="Le nombre de ages est égale à " + compterAge(students)
+
 }
 
 document.getElementById('searchInput').addEventListener('input', () => {
@@ -110,7 +142,7 @@ let closeModal = document.getElementById('closeModal');
 
 // une fonction pour vider les champs du formulaire quand on ferme
 function viderFormulaire() {
-    let formulaire= document.getElementById('formulaire')
+    let formulaire = document.getElementById('formulaire')
     formulaire.reset()
 }
 // evenement pour afficher le modal à partir du boutton ajouter
@@ -132,15 +164,15 @@ document.getElementById('modal').addEventListener('click', (event) => {
     }
 });
 
-// enregister les données dans le local storage
-let envoyerModal= document.getElementById('envoyerModal')
-envoyerModal.addEventListener('click', ()=>{
-    let prenomAjout= document.getElementById('prenomAjout').value
-    let nomAjout= document.getElementById('nomAjout').value
-    let ageAjout= document.getElementById('ageAjout').value
-    let noteAjout= document.getElementById('noteAjout').value
+// enregister les données dans le local storage et l'afficher dans le tableau
+let envoyerModal = document.getElementById('envoyerModal')
+envoyerModal.addEventListener('click', () => {
+    let prenomAjout = document.getElementById('prenomAjout').value
+    let nomAjout = document.getElementById('nomAjout').value
+    let ageAjout = document.getElementById('ageAjout').value
+    let noteAjout = document.getElementById('noteAjout').value
 
-    if (prenomAjout===''||nomAjout===''||ageAjout===''||noteAjout==='') {
+    if (prenomAjout === '' || nomAjout === '' || ageAjout === '' || noteAjout === '') {
         alert('veuiller renseigner les champs')
     } else {
         const newStudent = {
@@ -156,8 +188,8 @@ envoyerModal.addEventListener('click', ()=>{
         localStorage.setItem('prenom', document.getElementById('prenomAjout').value);
         localStorage.setItem('age', document.getElementById('ageAjout').value);
         localStorage.setItem('note', document.getElementById('noteAjout').value);
-        
-        modal.style.display='none';
+
+        // modal.style.display='none';
         viderFormulaire();
         filtre();
     }
@@ -165,43 +197,4 @@ envoyerModal.addEventListener('click', ()=>{
 
 
 
-// FONCTION SOMME DES NOTES
-function SommeNote() {
-    let totalNote = 0
-    for (const chaqueNote of students) {
-        totalNote += chaqueNote.note
-    }
-    return totalNote
-}
-console.log(SommeNote());
-let resultCard1 = document.getElementById("card1")
-resultCard1.innerText = SommeNote()
-
-// FONCTION SOMME DES AGES
-function SommeAge() {
-    let totalAge = 0
-    for (const chaqueAge of students) {
-        totalAge += chaqueAge.age
-    }
-    return totalAge
-}
-console.log(SommeAge());
-let resultCard2 = document.getElementById("card2")
-resultCard2.innerText = "La somme des ages est égale à " + SommeAge()
-
-// FONCTION NOMBRE DE NOTES
-function compterNotes() {
-    return students.length;
-}
-const NbreNote = compterNotes(students)
-let resultCard3 = document.getElementById("card3")
-resultCard3.innerText = "Le nombre de note est égale à " + compterNotes(students)
-
-// FONCTION NOMBRE D'AGES
-function compterAge() {
-    return students.length;
-}
-const NbreAge = compterAge(students)
-let resultCard4 = document.getElementById("card4")
-resultCard4.innerText = "Le nombre de ages est égale à " + compterAge(students)
 
