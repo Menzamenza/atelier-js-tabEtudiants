@@ -51,7 +51,9 @@ function compterAge() {
     return students.length;
 }
 
-
+// mettre les icones dans les variables
+const supprimer = '<i class="fa-solid fa-trash border border-danger p-2 rounded" style="color: red;" onclick="supprimerEtudiant(event)"></i>';
+const modifier = '<i class="fa-solid fa-pen ms-4 border border-success p-2 rounded" style="color: green;"onclick="modifierEtudiant(event)" ></i>'
 // Fonction pour afficher les étudiants
 function AfficheEtudiant(EtudiantAffiche) {
     const tbody = document.getElementById('Tbody');
@@ -61,29 +63,61 @@ function AfficheEtudiant(EtudiantAffiche) {
     for (let i = 0; i < EtudiantAffiche.length; i++) {
         const student = EtudiantAffiche[i];
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${student.nom}</td><td>${student.prenom}</td><td>${student.note}</td><td>${student.age}</td>`;
+        tr.innerHTML = `<td>${student.nom}</td><td>${student.prenom}</td><td>${student.note}</td><td>${student.age}</td> <td données-id="${i}">${supprimer} ${modifier}</td>`;
         tbody.appendChild(tr);
     }
-
-    // tiliser map et une boucle for pour afficher
-    // const studentMap = students.map(student => {
-    //     const tr = document.createElement('tr');
-    //     tr.innerHTML = `<td>${student.nom}</td><td>${student.prenom}</td><td>${student.note}</td><td>${student.age}</td>`;
-    //     return tr
-    // })
-    // for (const lignes of studentMap) {
-    //     tbody.appendChild(lignes)
-    // }
-    // une autre utilisation de map
-    // EtudiantAffiche.map(student => {
-    //     const tr = document.createElement('tr');
-    //     tr.innerHTML = `<td>${student.nom}</td><td>${student.prenom}</td><td>${student.note}</td><td>${student.age}</td>`;
-    //     tbody.appendChild(tr);
-    // });
+    localStorage.setItem('students', JSON.stringify(students));
 
 }
 
+// fonction pour supprimer un etudiant par l'icone supprimer 
+function supprimerEtudiant(event) {
+    const index = event.target.closest('td').getAttribute('données-id');
+    students.splice(index, 1);
+    filtre();
+}
 
+// fonction pour modifier les informations de l'étudiant 
+function modifierEtudiant(event) {
+    const index = event.target.closest('td').getAttribute('données-id');
+    const student = students[index];
+    
+    document.getElementById('prenomAjout').value = student.prenom;
+    document.getElementById('nomAjout').value = student.nom;
+    document.getElementById('ageAjout').value = student.age;
+    document.getElementById('noteAjout').value = student.note;
+    
+    modal.style.display = 'block';
+    
+    envoyerModal.onclick = function() {
+        student.prenom= document.getElementById('prenomAjout').value;
+        student.nom = document.getElementById('nomAjout').value;
+        student.age = parseInt(document.getElementById('ageAjout').value);
+        student.note = parseFloat(document.getElementById('noteAjout').value);
+
+       
+        // Vérifiez si les champs ne sont pas vides et les convertir correctement
+        if (prenomAjout !== '' && nomAjout !== '' && !isNaN(ageAjout) && !isNaN(noteAjout)) {
+            student.prenom= prenomAjout;
+            student.nom = nomAjout;
+            student.age = ageAjout;
+            student.note = noteAjout;
+
+            // Enregistrer les modifications
+            students[index] = student;
+            localStorage.setItem('students', JSON.stringify(students));
+            
+            // Fermer le modal
+            modal.style.display = 'none';
+            viderFormulaire();
+            filtre();
+        } else {
+            alert('Veuillez remplir tous les champs correctement.');
+        }
+    };
+}
+
+// fonction de la pagination
 function Pagination(EtudiantPagination) {
     const pagination = document.getElementById('pagination');
     pagination.innerHTML = '';
@@ -108,6 +142,7 @@ function Pagination(EtudiantPagination) {
     }
 }
 
+// fonction du filtre là où j'ai appelé les autres fonctions
 function filtre() {
     const searchInput = document.getElementById('searchInput').value.toLowerCase();
     const EtudiantFiltres = students.filter(student =>
@@ -120,11 +155,11 @@ function filtre() {
     AfficheEtudiant(EtudiantAffiche);
     Pagination(EtudiantFiltres);
 
-    document.getElementById('MoyGen').innerText = Moyenne();
-    document.getElementById('card1').innerText=SommeNote();
-    document.getElementById('card2').innerText="La somme des ages est égale à " + SommeAge()
-    document.getElementById('card3').innerText="Le nombre de note est égale à " + compterNotes(students)
-    document.getElementById('card4').innerText="Le nombre de ages est égale à " + compterAge(students)
+    document.getElementById('MoyGen').innerText = Math.round(Moyenne() * 100) / 100;
+    document.getElementById('card1').innerText = SommeNote();
+    document.getElementById('card2').innerText = "La somme des ages est égale à " + SommeAge()
+    document.getElementById('card3').innerText = "Le nombre de note est égale à " + compterNotes(students)
+    document.getElementById('card4').innerText = "Le nombre de ages est égale à " + compterAge(students)
 
 }
 
@@ -132,6 +167,7 @@ document.getElementById('searchInput').addEventListener('input', () => {
     PageCurrent = 1;
     filtre();
 });
+
 
 window.onload = filtre;
 
@@ -183,11 +219,8 @@ envoyerModal.addEventListener('click', () => {
         };
 
         students.push(newStudent);
+        localStorage.setItem('students', JSON.stringify(students));
 
-        localStorage.setItem('nom', document.getElementById('nomAjout').value);
-        localStorage.setItem('prenom', document.getElementById('prenomAjout').value);
-        localStorage.setItem('age', document.getElementById('ageAjout').value);
-        localStorage.setItem('note', document.getElementById('noteAjout').value);
 
         // modal.style.display='none';
         viderFormulaire();
