@@ -50,7 +50,6 @@ function compterNotes() {
 function compterAge() {
     return students.length;
 }
-
 // mettre les icones dans les variables
 const supprimer = '<i class="fa-solid fa-trash border border-danger p-2 rounded" style="color: red;" onclick="supprimerEtudiant(event)"></i>';
 const modifier = '<i class="fa-solid fa-pen ms-4 border border-success p-2 rounded" style="color: green;"onclick="modifierEtudiant(event)" ></i>'
@@ -75,46 +74,6 @@ function supprimerEtudiant(event) {
     const index = event.target.closest('td').getAttribute('données-id');
     students.splice(index, 1);
     filtre();
-}
-
-// fonction pour modifier les informations de l'étudiant 
-function modifierEtudiant(event) {
-    const index = event.target.closest('td').getAttribute('données-id');
-    const student = students[index];
-    
-    document.getElementById('prenomAjout').value = student.prenom;
-    document.getElementById('nomAjout').value = student.nom;
-    document.getElementById('ageAjout').value = student.age;
-    document.getElementById('noteAjout').value = student.note;
-    
-    modal.style.display = 'block';
-    
-    envoyerModal.onclick = function() {
-        student.prenom= document.getElementById('prenomAjout').value;
-        student.nom = document.getElementById('nomAjout').value;
-        student.age = parseInt(document.getElementById('ageAjout').value);
-        student.note = parseFloat(document.getElementById('noteAjout').value);
-
-       
-        // Vérifiez si les champs ne sont pas vides et les convertir correctement
-        if (prenomAjout !== '' && nomAjout !== '' && !isNaN(ageAjout) && !isNaN(noteAjout)) {
-            student.prenom= prenomAjout;
-            student.nom = nomAjout;
-            student.age = ageAjout;
-            student.note = noteAjout;
-
-            // Enregistrer les modifications
-            students[index] = student;
-            localStorage.setItem('students', JSON.stringify(students));
-            
-            // Fermer le modal
-            modal.style.display = 'none';
-            viderFormulaire();
-            filtre();
-        } else {
-            alert('Veuillez remplir tous les champs correctement.');
-        }
-    };
 }
 
 // fonction de la pagination
@@ -158,8 +117,8 @@ function filtre() {
     document.getElementById('MoyGen').innerText = Math.round(Moyenne() * 100) / 100;
     document.getElementById('card1').innerText = SommeNote();
     document.getElementById('card2').innerText = "La somme des ages est égale à " + SommeAge()
-    document.getElementById('card3').innerText = "Le nombre de note est égale à " + compterNotes(students)
-    document.getElementById('card4').innerText = "Le nombre de ages est égale à " + compterAge(students)
+    document.getElementById('card3').innerText = "Le nombre total de notes est égale à " + compterNotes(students)
+    document.getElementById('card4').innerText = "Le nombre total d'âges est égale à " + compterAge(students)
 
 }
 
@@ -227,7 +186,51 @@ envoyerModal.addEventListener('click', () => {
         filtre();
     }
 })
+// fonction pour modifier les informations de l'étudiant 
+function modifierEtudiant(event) {
+    const index = event.target.closest('td').getAttribute('données-id');
+    const student = students[index];
+    
+    document.getElementById('prenomAjout').value = student.prenom;
+    document.getElementById('nomAjout').value = student.nom;
+    document.getElementById('ageAjout').value = student.age;
+    document.getElementById('noteAjout').value = student.note;
+    
+    modal.style.display = 'block';
+    
+    console.log(student.prenom);
+    console.log(nomAjout);
+    console.log(ageAjout);
+    console.log(noteAjout);
+    envoyerModal.click = function() {
+        student.prenom= document.getElementById('prenomAjout').value;
+        student.nom = document.getElementById('nomAjout').value;
+        student.age = parseInt(document.getElementById('ageAjout').value);
+        student.note = parseFloat(document.getElementById('noteAjout').value);
 
+à       
+        // Vérifiez si les champs ne sont pas vides et les convertir correctement
+        if (prenomAjout !== '' && nomAjout !== '' && !isNaN(ageAjout) && !isNaN(noteAjout)) {
+            student.prenom= document.getElementById('prenomAjout').value;
+            console.log(student.prenom);
+            student.nom = nomAjout;
+            student.age = ageAjout;
+            student.note = noteAjout;
 
+            // Enregistrer les modifications
+            students[index] = student;
+            localStorage.setItem('students', JSON.stringify(students));
+            
+            // Fermer le modal
+            modal.style.display = 'none';
+            viderFormulaire();
+            filtre();
+        } else {
+            alert('Veuillez remplir tous les champs correctement.');
+        }
+        envoyerModal.click = null;
+
+    };
+} 
 
 
