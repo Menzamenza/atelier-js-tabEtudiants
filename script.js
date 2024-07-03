@@ -185,8 +185,8 @@ envoyerModal.addEventListener('click', () => {
     let ageAjout = document.getElementById('ageAjout').value;
     let noteAjout = document.getElementById('noteAjout').value;
 
-    if (prenomAjout === '' || nomAjout === '' || ageAjout === '' || noteAjout === '') {
-        alert('Veuillez renseigner les champs');
+    if (prenomAjout === '' || nomAjout === '' || ageAjout === '' || noteAjout === '' || noteAjout >20) {
+        alert('Veuillez renseigner les champs correctement');
     } else {
         const newStudent = {
             nom: nomAjout,
