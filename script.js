@@ -4,11 +4,15 @@ const NbreEtudiantsPage = 5;
 let PageCurrent = 1;
 
 function Moyenne() {
-    let Total = 0;
-    for (const student of students) {
-        Total += student.note;
+    if (students.length===0) {
+        return 0
+    } else {
+        let Total = 0;
+        for (const student of students) {
+            Total += student.note;
+        }
+        return Total / students.length;  
     }
-    return Total / students.length;
 }
 
 // FONCTION SOMME DES NOTES
